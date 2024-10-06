@@ -22,7 +22,6 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "   FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);\n"
 "}\n\0";
 
-uint32_t _shaderProgram = NULL;
 uint32_t _VAO, _VBO, _EBO;
 Shader _shader;
 
@@ -133,7 +132,6 @@ void render(GLFWwindow* window)
 	glClearColor(0.f, 0.f, 0.f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	//glUseProgram(_shaderProgram);
 	_shader.use();
 	glBindVertexArray(_VAO);
 	glDrawElements(GL_TRIANGLES, /*indices num*/6, GL_UNSIGNED_INT, 0);
@@ -149,6 +147,5 @@ void cleanUp()
 	glDeleteVertexArrays(1, &_VAO);
 	glDeleteBuffers(1, &_VBO);
 	glDeleteBuffers(1, &_EBO);
-	glDeleteProgram(_shaderProgram);
 	_shader.cleanUp();
 }

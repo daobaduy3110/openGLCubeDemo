@@ -37,6 +37,15 @@
     <Filter Include="Resource Files\shader">
       <UniqueIdentifier>{12419554-c209-4cc1-b90e-3f22c078377f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\model">
+      <UniqueIdentifier>{92912f60-7863-4cdc-93b1-dbcfdb2f1b0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{4d0939bf-ce05-4e8a-909b-fd2123e7e8bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{eee415d6-b36d-4e6d-bd23-77783ef93667}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\glad\glad.h">
@@ -63,6 +72,12 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\core\Camera.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\Math.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad\glad.c">
@@ -74,6 +89,12 @@
     <ClCompile Include="src\core\Shader.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\Camera.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\Math.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Cube.fs">
@@ -82,5 +103,10 @@
     <None Include="resource\shader\Cube.vs">
       <Filter>Resource Files\shader</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="resource\model\Cube.txt">
+      <Filter>Resource Files\model</Filter>
+    </Text>
   </ItemGroup>
 </Project>
