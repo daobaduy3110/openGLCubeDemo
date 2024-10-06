@@ -23,12 +23,19 @@
     <ClInclude Include="include\GLFW\glfw3.h" />
     <ClInclude Include="include\GLFW\glfw3native.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\core\ISingleton.h" />
+    <ClInclude Include="src\core\Shader.h" />
     <ClInclude Include="src\core\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\Shader.cpp" />
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resource\shader\Cube.fs" />
+    <None Include="resource\shader\Cube.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
