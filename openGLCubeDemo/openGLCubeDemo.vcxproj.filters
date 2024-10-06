@@ -25,6 +25,12 @@
     <Filter Include="Source Files\glad">
       <UniqueIdentifier>{fb8efff4-6ce3-4edf-8d58-31665c360504}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\GLFW">
+      <UniqueIdentifier>{d0e25f69-e2df-4315-8e17-3779ac3c7e16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{b1a85f30-a58f-40f5-a927-5b9f33f4471b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\glad\glad.h">
@@ -32,6 +38,18 @@
     </ClInclude>
     <ClInclude Include="include\KHR\khrplatform.h">
       <Filter>include\KHR</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLFW\glfw3.h">
+      <Filter>include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLFW\glfw3native.h">
+      <Filter>include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Vertex.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\ISingleton.h">
+      <Filter>Header Files\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
