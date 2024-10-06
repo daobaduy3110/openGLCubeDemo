@@ -9,12 +9,12 @@ class Camera
 public:
 	Camera() {}
 	~Camera() {}
-	Vector3 m_Position; //World coordinate
-	Vector3 m_Target; //World coordinate
-	Vector3 m_Up;
-	Matrix m_ViewMatrix;
+	Vector3 getPosition() { return _position; }
+	Vector3 getTarget() { return _target; }
+	Vector3 getUpVector() { return _up; }
+	Matrix getViewMatrix() { return _viewMatrix; }
 
-	void Init(const Vector3& v3);
+	void init(const Vector3& v3);
 
 	void MoveLeft(float speed, float deltaTime);
 	void MoveRight(float speed, float deltaTime);
@@ -27,4 +27,10 @@ public:
 	void RotateDown(float speed, float deltaTime);
 	void RotateLeft(float speed, float deltaTime);
 	void RotateRight(float speed, float deltaTime);
+
+private:
+	Vector3 _position; //World coordinate
+	Vector3 _target; //World coordinate
+	Vector3 _up;
+	Matrix _viewMatrix;
 };

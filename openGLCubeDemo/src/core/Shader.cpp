@@ -59,7 +59,6 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 // activate the shader
 void Shader::use()
 {
-    setVec3("uColor", { 1.0f, 0.0f, 0.0f });
     glUseProgram(_programID);
 }
 

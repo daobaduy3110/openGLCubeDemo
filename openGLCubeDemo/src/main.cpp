@@ -2,27 +2,19 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "core/Shader.h"
+#include "definitions.h"
+#include <stb/stb_image.h>
+#include "definitions.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void setupVertexData();
+void loadTexture();
 void render(GLFWwindow* window);
 void cleanUp();
 
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);\n"
-"}\n\0";
-
 uint32_t _VAO, _VBO, _EBO;
+uint32_t _texture1;
 Shader _shader;
 
 int main()
@@ -37,8 +29,7 @@ int main()
 #endif
 
 	// create window
-	const int width = 1200, height = 800;
-	GLFWwindow* window = glfwCreateWindow(width, height, "OpenGLCubeDemo", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGLCubeDemo", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -56,13 +47,15 @@ int main()
 
 	// setup viewport
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	framebuffer_size_callback(window, width, height);
+	framebuffer_size_callback(window, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	// compile shaders
-	_shader = Shader("resource/shader/Cube.vs", "resource/shader/Cube.fs");
+	_shader = Shader(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH);
 
 	// setup vertex data
 	setupVertexData();
+
+	loadTexture();
 
 	// render loop
 	while (!glfwWindowShouldClose(window))
@@ -76,25 +69,14 @@ int main()
 	return 0;
 }
 
-void processInput(GLFWwindow* window)
-{
-	// close when press ESC
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
-
 void setupVertexData()
 {
 	float vertices[] = {
-	 0.5f,  0.5f, 0.0f,  // top right
-	 0.5f, -0.5f, 0.0f,  // bottom right
-	-0.5f, -0.5f, 0.0f,  // bottom left
-	-0.5f,  0.5f, 0.0f   // top left 
+		// positions          // texture coords
+		 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
+		 0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
+		-0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
 	};
 	uint32_t indices[] = {
 		0, 1, 3,  // first Triangle
@@ -113,8 +95,12 @@ void setupVertexData()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	// texture coord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	// unbind vbo
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -125,12 +111,54 @@ void setupVertexData()
 	glBindVertexArray(0);
 }
 
+void loadTexture()
+{
+	// load and create a texture 
+// -------------------------
+	// texture 1
+	// ---------
+	glGenTextures(1, &_texture1);
+	glBindTexture(GL_TEXTURE_2D, _texture1);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// load image, create texture and generate mipmaps
+	int width, height, nrChannels;
+	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
+	unsigned char* data = stbi_load(IMAGE_PATH, &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+
+	// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
+	// -------------------------------------------------------------------------------------------
+	_shader.use(); // don't forget to activate/use the shader before setting uniforms!
+	// either set it manually like so:
+	glUniform1i(glGetUniformLocation(_shader._programID, "texture1"), 0);
+	_shader.setVec3("uColor", { -1.0f, 0.0f, 0.0f });
+
+}
+
 void render(GLFWwindow* window)
 {
 	processInput(window);
 
 	glClearColor(0.f, 0.f, 0.f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	// bind textures on corresponding texture units
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _texture1);
 
 	_shader.use();
 	glBindVertexArray(_VAO);
@@ -148,4 +176,16 @@ void cleanUp()
 	glDeleteBuffers(1, &_VBO);
 	glDeleteBuffers(1, &_EBO);
 	_shader.cleanUp();
+}
+
+void processInput(GLFWwindow* window)
+{
+	// close when press ESC
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
 }

@@ -23,18 +23,27 @@
     <ClInclude Include="include\GLFW\glfw3.h" />
     <ClInclude Include="include\GLFW\glfw3native.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
+    <ClInclude Include="include\stb\stb_image.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\core\Camera.h" />
     <ClInclude Include="src\core\ISingleton.h" />
+    <ClInclude Include="src\core\Object.h" />
     <ClInclude Include="src\core\Shader.h" />
     <ClInclude Include="src\core\Vertex.h" />
+    <ClInclude Include="src\CubeScene.h" />
+    <ClInclude Include="src\definitions.h" />
+    <ClInclude Include="src\SceneManager.h" />
     <ClInclude Include="src\util\Math.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\stb\stb_image.cpp" />
     <ClCompile Include="src\core\Camera.cpp" />
+    <ClCompile Include="src\core\Object.cpp" />
     <ClCompile Include="src\core\Shader.cpp" />
+    <ClCompile Include="src\CubeScene.cpp" />
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\util\Math.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -43,6 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="resource\model\Cube.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resource\image\brick.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
