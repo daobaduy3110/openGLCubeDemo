@@ -21,6 +21,7 @@ public:
 	void readFile(const std::string file);
 	Object* getObjectByID(GLuint objectID);
 
+	void init();
 	void drawScene();
 	void updateScene(float deltaTime);
 	void readKey(unsigned char key);
@@ -32,3 +33,5 @@ private:
 	Matrix _projectionMat;
 	std::unique_ptr<Camera> _camera;
 };
+
+#define SCENE_MGR SceneManager::getInstance()

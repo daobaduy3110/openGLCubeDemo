@@ -5,6 +5,7 @@
 #include "definitions.h"
 #include <stb/stb_image.h>
 #include "definitions.h"
+#include "SceneManager.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -49,13 +50,14 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	framebuffer_size_callback(window, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	// compile shaders
-	_shader = Shader(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH);
 
 	// setup vertex data
 	setupVertexData();
 
 	loadTexture();
+
+	// compile shaders
+	_shader = Shader(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH);
 
 	// render loop
 	while (!glfwWindowShouldClose(window))
