@@ -16,10 +16,25 @@ void setupVertexData();
 void loadTexture();
 void render(GLFWwindow* window);
 void cleanUp();
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 uint32_t _VAO, _VBO/*, _EBO*/;
 uint32_t _texture0;
 Shader _shader;
+// camera
+Camera camera(glm::vec3(-0.5f, 1.5f, 4.0f));
+float lastX = WINDOW_WIDTH / 2.0f;
+float lastY = WINDOW_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+// timing
+float deltaTime = 0.0f;	// time between current frame and last frame
+float lastFrame = 0.0f;
+
+// cube model mat
+glm::mat4 modelMat = glm::mat4(1.0f);
+glm::mat4 projectionMat = glm::mat4(1.0f);
 
 int main()
 {
@@ -42,7 +57,13 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 	// setup viewport
+	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	//glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
+
+	// tell GLFW to capture our mouse
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// init GLAD
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -89,47 +110,47 @@ void setupVertexData()
 	//	1, 2, 3   // second Triangle
 	//};
 	float vertices[] = {
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,	0,
+	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,	0,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	0,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	0,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,	0,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,	0,
 
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	1,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,	1,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,	1,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,	1,
+	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,	1,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	1,
 
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	2,
+	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	2,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	2,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	2,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	2,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	2,
 
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	3,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	3,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	3,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	3,
+	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	3,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	3,
 
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	4,
+	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,	4,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,	4,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,	4,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	4,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	4,
 
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,	5,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	5,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	5,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	5,
+	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,	5,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,	5
 	};
 
 	glGenVertexArrays(1, &_VAO);
@@ -144,10 +165,13 @@ void setupVertexData()
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float) + sizeof(int), (void*)0);
 	glEnableVertexAttribArray(0);
 	// texture coord attribute
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float) + sizeof(int), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	// face id attribute
+	glVertexAttribPointer(2, 1, GL_INT, GL_FALSE, 5 * sizeof(float) + sizeof(int), (void*)(5 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	//// unbind vbo
@@ -197,6 +221,12 @@ void loadTexture()
 
 void render(GLFWwindow* window)
 {
+	// per-frame time logic
+	// --------------------
+	float currentFrame = static_cast<float>(glfwGetTime());
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+
 	processInput(window);
 
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
@@ -210,18 +240,12 @@ void render(GLFWwindow* window)
 	_shader.use();
 
 	// create transformations
-	glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-	glm::mat4 projection = glm::mat4(1.0f);
-	projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.3f, 0.5f));
+	projectionMat = glm::perspective(glm::radians(camera.Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
+	glm::mat4 view = camera.GetViewMatrix();
 	// pass transformation matrices to the shader
-	_shader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+	_shader.setMat4("projection", projectionMat); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
 	_shader.setMat4("view", view);
-	_shader.setMat4("model", model);
+	_shader.setMat4("model", modelMat);
 
 	glBindVertexArray(_VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -245,9 +269,81 @@ void processInput(GLFWwindow* window)
 	// close when press ESC
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	// camera handling
+	if (glfwGetKey(window, GLFW_KEY_KP_8) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_KP_2) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_KP_4) == GLFW_PRESS)
+		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_KP_6) == GLFW_PRESS)
+		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
+		camera.ProcessKeyboard(UP, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
+		camera.ProcessKeyboard(DOWN, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_HOME) == GLFW_PRESS)
+		camera.ProcessKeyboard(ROTATE_UP, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_END) == GLFW_PRESS)
+		camera.ProcessKeyboard(ROTATE_DOWN, deltaTime);
+
+	// rotate the cube
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+		modelMat = glm::rotate(modelMat, glm::radians(0.1f), glm::vec3(1.0f, 0.0f, 0.0f));
+		_shader.setMat4("model", modelMat);
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		modelMat = glm::rotate(modelMat, glm::radians(-0.1f), glm::vec3(1.0f, 0.0f, 0.0f));
+		_shader.setMat4("model", modelMat);
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	{
+		modelMat = glm::rotate(modelMat, glm::radians(0.1f), glm::vec3(0.0f, 1.0f, 0.0f));
+		_shader.setMat4("model", modelMat);
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	{
+		modelMat = glm::rotate(modelMat, glm::radians(-0.1f), glm::vec3(0.0f, 1.0f, 0.0f));
+		_shader.setMat4("model", modelMat);
+	}
+
+	// change cube faces
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+{
+	float xpos = static_cast<float>(xposIn);
+	float ypos = static_cast<float>(yposIn);
+
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+	lastX = xpos;
+	lastY = ypos;
+
+	camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
