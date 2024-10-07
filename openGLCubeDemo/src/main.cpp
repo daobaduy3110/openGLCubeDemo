@@ -38,6 +38,7 @@ glm::mat4 modelMat = glm::mat4(1.0f);
 glm::mat4 projectionMat = glm::mat4(1.0f);
 
 glm::vec3 cubeColor = glm::vec3(0.0f, 0.0f, 1.0f);
+bool useTexture = false;
 
 int main()
 {
@@ -222,6 +223,7 @@ void loadTexture()
 	_shader.setInt("uFaceConfig", (1 << 6) - 1);	// set all faces
 	_shader.setVec3("uColor", cubeColor);
 	_shader.setVec3("cubeColor", cubeColor);
+	_shader.setBool("useTexture", useTexture);
 }
 
 void render(GLFWwindow* window)
@@ -334,6 +336,13 @@ void processInput(GLFWwindow* window)
 		_shader.setVec3("uColor", color);
 		_shader.setInt("uFaceConfig", faceConfig);
 		cubeColor = color;
+	}
+
+	// use textures
+	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+	{
+		useTexture = !useTexture;	// toggle
+		_shader.setBool("useTexture", useTexture);
 	}
 }
 
