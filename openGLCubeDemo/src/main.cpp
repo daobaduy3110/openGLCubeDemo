@@ -391,5 +391,9 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	camera.ProcessMouseScroll(static_cast<float>(yoffset));
+	//camera.ProcessMouseScroll(static_cast<float>(yoffset));
+	if (isAutoRotate)
+	{
+		autoRotateSpeed += yoffset * 0.3f;
+	}
 }
