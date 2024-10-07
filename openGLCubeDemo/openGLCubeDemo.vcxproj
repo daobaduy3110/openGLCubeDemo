@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\glad\glad.h" />
-    <ClInclude Include="include\GLFW\glfw3.h" />
-    <ClInclude Include="include\GLFW\glfw3native.h" />
-    <ClInclude Include="include\KHR\khrplatform.h" />
-    <ClInclude Include="include\stb\stb_image.h" />
+    <ClInclude Include="externals\glad\glad.h" />
+    <ClInclude Include="externals\GLFW\glfw3.h" />
+    <ClInclude Include="externals\GLFW\glfw3native.h" />
+    <ClInclude Include="externals\KHR\khrplatform.h" />
+    <ClInclude Include="externals\stb\stb_image.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\core\Camera.h" />
     <ClInclude Include="src\core\ISingleton.h" />
@@ -36,7 +36,7 @@
     <ClInclude Include="src\util\Math.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="include\stb\stb_image.cpp" />
+    <ClCompile Include="externals\stb\stb_image.cpp" />
     <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\core\Object.cpp" />
     <ClCompile Include="src\core\Shader.cpp" />
@@ -109,8 +109,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(ProjectDir)lib\$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)externals\libraries;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)externals;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir)externals;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)externals\libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
