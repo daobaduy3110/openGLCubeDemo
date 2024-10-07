@@ -5,8 +5,8 @@
 #include <memory>
 #include "core/Camera.h"
 #include <string>
+#include "core/Object.h"
 
-class Object;
 class SceneManager : public ISingleton<SceneManager>
 {
 public:
@@ -22,16 +22,20 @@ public:
 	Object* getObjectByID(GLuint objectID);
 
 	void init();
+	void setupVertexData();
+	void loadTextures();
+	void setupShaders();
 	void drawScene();
 	void updateScene(float deltaTime);
 	void readKey(unsigned char key);
 	void cleanUp();
 private:
-	std::vector<std::shared_ptr<Object>> _objs;
-	GLuint obj_num = 0;
-
+	GLuint _VAO = 0, _VBO = 0;
+	GLuint _texture0;
 	Matrix _projectionMat;
+	Matrix _viewMat;
 	std::unique_ptr<Camera> _camera;
+	std::vector<std::unique_ptr<Object>> _objs{};
 };
 
 #define SCENE_MGR SceneManager::getInstance()

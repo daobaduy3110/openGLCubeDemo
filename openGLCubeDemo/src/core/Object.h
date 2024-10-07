@@ -5,7 +5,6 @@
 #include "Shader.h"
 
 class Vertex;
-//class Texture;
 class Camera;
 
 class Object
@@ -18,16 +17,19 @@ public:
 	GLuint getID() { return _id; }
 	void render();
 	virtual void readFile(FILE*& f);
+	virtual void setupVertexData();
+	virtual void setupShader();
 	virtual void passAdditionalUniforms();
 	virtual void update();
 	virtual void cleanUp();
 private:
 	GLuint _id;
-	Matrix _worldMatrix;
-	Matrix _viewMatrix;
+	Matrix _modelMat;
 	Vector3 _position;
 	Vector3 _rotation;
 	Vector3 _scale;
-	//std::vector<std::unique_ptr<Texture>> _textures;
-	std::unique_ptr<Shader> _shader;
+	std::unique_ptr<Shader> _shader;	// assuming only 1 shader for each object
+	glm::vec3 _cubeColor = glm::vec3(0.0f, 0.0f, 1.0f);
+	bool _useTexture = false;
+	bool _isAutoRotate = false;
 };

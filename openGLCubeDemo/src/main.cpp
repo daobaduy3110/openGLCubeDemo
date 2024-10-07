@@ -328,7 +328,7 @@ void processInput(GLFWwindow* window)
 	const auto faceKeys = { GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5, GLFW_KEY_6 };
 	int faceConfig = 0;
 	bool hasChangeCubeFace = false;
-	for (auto it = faceKeys.begin(); it < faceKeys.end(); ++it)
+	for (auto it = faceKeys.begin(); it != faceKeys.end(); ++it)
 	{
 		if (glfwGetKey(window, *it) == GLFW_PRESS)
 		{
