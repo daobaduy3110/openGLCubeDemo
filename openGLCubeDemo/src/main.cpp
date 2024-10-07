@@ -39,6 +39,8 @@ glm::mat4 projectionMat = glm::mat4(1.0f);
 
 glm::vec3 cubeColor = glm::vec3(0.0f, 0.0f, 1.0f);
 bool useTexture = false;
+bool isAutoRotate = false;
+float autoRotateSpeed = 1.0f;
 
 int main()
 {
@@ -252,6 +254,11 @@ void render(GLFWwindow* window)
 	// pass transformation matrices to the shader
 	_shader.setMat4("projection", projectionMat); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
 	_shader.setMat4("view", view);
+
+	if (isAutoRotate)
+	{
+		modelMat = glm::rotate(modelMat, glm::radians(autoRotateSpeed), glm::vec3(0.0f, 0.0f, 1.0f));
+	}
 	_shader.setMat4("model", modelMat);
 
 	glBindVertexArray(_VAO);
@@ -343,6 +350,12 @@ void processInput(GLFWwindow* window)
 	{
 		useTexture = !useTexture;	// toggle
 		_shader.setBool("useTexture", useTexture);
+	}
+
+	// auto rotate
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		isAutoRotate = !isAutoRotate;	// toggle
 	}
 }
 
