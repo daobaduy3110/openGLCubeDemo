@@ -37,6 +37,8 @@ float lastFrame = 0.0f;
 glm::mat4 modelMat = glm::mat4(1.0f);
 glm::mat4 projectionMat = glm::mat4(1.0f);
 
+glm::vec3 cubeColor = glm::vec3(0.0f, 0.0f, 1.0f);
+
 int main()
 {
 	// init glfw
@@ -111,47 +113,47 @@ void setupVertexData()
 	//	1, 2, 3   // second Triangle
 	//};
 	float vertices[] = {
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,	0,
-	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,	0,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	0,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	0,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,	0,
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,	0,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,	0.0,
+	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,	0.0,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	0.0,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	0.0,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,	0.0,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,	0.0,
 
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	1,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,	1,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,	1,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,	1,
-	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,	1,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	1,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	1.0,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,	1.0,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,	1.0,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,	1.0,
+	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,	1.0,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	1.0,
 
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	2,
-	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	2,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	2,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	2,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	2,
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	2,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	2.0,
+	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	2.0,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	2.0,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	2.0,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	2.0,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	2.0,
 
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	3,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	3,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	3,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	3,
-	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	3,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	3,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	3.0,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	3.0,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	3.0,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	3.0,
+	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	3.0,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	3.0,
 
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	4,
-	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,	4,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,	4,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,	4,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	4,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	4,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	4.0,
+	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,	4.0,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,	4.0,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,	4.0,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,	4.0,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,	4.0,
 
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,	5,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	5,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	5,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	5,
-	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,	5,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,	5
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,	5.0,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,	5.0,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	5.0,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,	5.0,
+	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,	5.0,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,	5.0
 	};
 
 	glGenVertexArrays(1, &_VAO);
@@ -166,14 +168,14 @@ void setupVertexData()
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float) + sizeof(int), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	// texture coord attribute
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float) + sizeof(int), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 	// face id attribute
-	glVertexAttribPointer(2, 1, GL_UNSIGNED_INT, GL_FALSE, 5 * sizeof(unsigned int) + sizeof(int), (void*)(5 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(5 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	//// unbind vbo
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -217,10 +219,9 @@ void loadTexture()
 	// -------------------------------------------------------------------------------------------
 	_shader.use();
 	_shader.setInt("texture0", 0);
-	const auto tt = (1 << 6) - 1;
-	_shader.setInt("uFaceConfig", (1 << 6) - 1);
-	const auto color = glm::ballRand<float>(0.5f) + glm::vec3(0.5f, 0.5f, 0.5f);
-	_shader.setVec3("uColor", color);
+	_shader.setInt("uFaceConfig", (1 << 6) - 1);	// set all faces
+	_shader.setVec3("uColor", cubeColor);
+	_shader.setVec3("cubeColor", cubeColor);
 }
 
 void render(GLFWwindow* window)
@@ -295,38 +296,45 @@ void processInput(GLFWwindow* window)
 	// rotate the cube
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		modelMat = glm::rotate(modelMat, glm::radians(0.1f), glm::vec3(1.0f, 0.0f, 0.0f));
+		modelMat = glm::rotate(modelMat, glm::radians(0.5f), glm::vec3(1.0f, 0.0f, 0.0f));
 		_shader.setMat4("model", modelMat);
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		modelMat = glm::rotate(modelMat, glm::radians(-0.1f), glm::vec3(1.0f, 0.0f, 0.0f));
+		modelMat = glm::rotate(modelMat, glm::radians(-0.5f), glm::vec3(1.0f, 0.0f, 0.0f));
 		_shader.setMat4("model", modelMat);
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		modelMat = glm::rotate(modelMat, glm::radians(0.1f), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelMat = glm::rotate(modelMat, glm::radians(0.5f), glm::vec3(0.0f, 1.0f, 0.0f));
 		_shader.setMat4("model", modelMat);
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		modelMat = glm::rotate(modelMat, glm::radians(-0.1f), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelMat = glm::rotate(modelMat, glm::radians(-0.5f), glm::vec3(0.0f, 1.0f, 0.0f));
 		_shader.setMat4("model", modelMat);
 	}
 
 	// change cube faces
 	const auto faceKeys = { GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5, GLFW_KEY_6 };
 	int faceConfig = 0;
+	bool hasChangeCubeFace = false;
 	for (auto it = faceKeys.begin(); it < faceKeys.end(); ++it)
 	{
 		if (glfwGetKey(window, *it) == GLFW_PRESS)
 		{
 			// set a random color for the face correspond to the key pressed
-			faceConfig += 1 << std::distance(it, faceKeys.begin());
+			faceConfig += (1 << std::distance(faceKeys.begin(), it));
+			hasChangeCubeFace = true;
 		}
 	}
-	_shader.setInt("uFaceConfig", faceConfig);
-	_shader.setVec3("uColor", glm::ballRand<float>(0.5f) + glm::vec3(0.5f, 0.5f, 0.5f));
+	if (hasChangeCubeFace)
+	{
+		const auto color = glm::ballRand<float>(0.5f) + glm::vec3(0.5f, 0.5f, 0.5f);
+		_shader.setVec3("uColor", color);
+		_shader.setInt("uFaceConfig", faceConfig);
+		cubeColor = color;
+	}
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
