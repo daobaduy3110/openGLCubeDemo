@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/random.hpp>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -171,7 +172,7 @@ void setupVertexData()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float) + sizeof(int), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 	// face id attribute
-	glVertexAttribPointer(2, 1, GL_INT, GL_FALSE, 5 * sizeof(float) + sizeof(int), (void*)(5 * sizeof(float)));
+	glVertexAttribPointer(2, 1, GL_UNSIGNED_INT, GL_FALSE, 5 * sizeof(unsigned int) + sizeof(int), (void*)(5 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	//// unbind vbo
@@ -216,7 +217,10 @@ void loadTexture()
 	// -------------------------------------------------------------------------------------------
 	_shader.use();
 	_shader.setInt("texture0", 0);
-	_shader.setVec3("uColor", { -1.0f, 0.0f, 0.0f });
+	const auto tt = (1 << 6) - 1;
+	_shader.setInt("uFaceConfig", (1 << 6) - 1);
+	const auto color = glm::ballRand<float>(0.5f) + glm::vec3(0.5f, 0.5f, 0.5f);
+	_shader.setVec3("uColor", color);
 }
 
 void render(GLFWwindow* window)
@@ -311,6 +315,18 @@ void processInput(GLFWwindow* window)
 	}
 
 	// change cube faces
+	const auto faceKeys = { GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5, GLFW_KEY_6 };
+	int faceConfig = 0;
+	for (auto it = faceKeys.begin(); it < faceKeys.end(); ++it)
+	{
+		if (glfwGetKey(window, *it) == GLFW_PRESS)
+		{
+			// set a random color for the face correspond to the key pressed
+			faceConfig += 1 << std::distance(it, faceKeys.begin());
+		}
+	}
+	_shader.setInt("uFaceConfig", faceConfig);
+	_shader.setVec3("uColor", glm::ballRand<float>(0.5f) + glm::vec3(0.5f, 0.5f, 0.5f));
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
