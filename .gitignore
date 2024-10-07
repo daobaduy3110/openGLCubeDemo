@@ -14,7 +14,6 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
 
 # Fortran module files
 *.mod
@@ -24,7 +23,6 @@
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
@@ -293,6 +291,7 @@ UpgradeLog*.XML
 UpgradeLog*.htm
 ServiceFabricBackup/
 *.rptproj.bak
+*.vcxproj.bak
 
 # SQL Server files
 *.mdf
