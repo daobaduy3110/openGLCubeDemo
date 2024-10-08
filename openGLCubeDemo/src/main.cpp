@@ -1,15 +1,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include "core/Shader.h"
 #include "definitions.h"
-#include <stb/stb_image.h>
 #include "definitions.h"
 #include "SceneManager.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/random.hpp>
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -63,7 +57,6 @@ int main()
 		return -1;
 	}
 
-	// compile shaders
 	SCENE_MGR->init();
 
 	// render loop

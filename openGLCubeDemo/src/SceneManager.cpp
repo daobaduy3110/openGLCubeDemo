@@ -1,3 +1,4 @@
+// duy.daoba
 #include "SceneManager.h"
 #include "definitions.h"
 #include <stb/stb_image.h>
@@ -202,7 +203,7 @@ void SceneManager::onInput(GLFWwindow* window)
 	}
 
 	// object rotation
-	const std::vector<int> objectKeys = { GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_LEFT, GLFW_KEY_RIGHT};
+	const std::vector<int> objectKeys = { GLFW_KEY_DOWN, GLFW_KEY_UP, GLFW_KEY_RIGHT, GLFW_KEY_LEFT};
 	const std::vector<float> objectRotateAngle = { _rotateStep, -_rotateStep, _rotateStep, -_rotateStep };
 	const std::vector<glm::vec3> objectRotateAxis = { glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f) };
 	for (auto i = 0; i < objectKeys.size(); ++i)
