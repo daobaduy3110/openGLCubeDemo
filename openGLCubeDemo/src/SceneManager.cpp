@@ -6,6 +6,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 void SceneManager::readFile(const std::string file)
 {
@@ -187,6 +190,37 @@ void SceneManager::render(float deltaTime)
 
 	glBindVertexArray(_VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
+
+	// Start the Dear ImGui frame
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+	ImGui::Begin("Navigator Guide");
+	const std::string guideText = ""
+		"Exit:						ESC\n"
+		"Move camera forward :		KP_8\n"
+		"Move camera backward :		KP_2\n"
+		"Move camera left :			KP_4\n"
+		"Move camera right :		KP_6\n"
+		"Move camera up :			PAGE_UP\n"
+		"Move camera down :			PAGE_DOWN\n"
+		"\n"
+		"Rotate camera up :			HOME\n"
+		"Rotate camera down :		END\n"
+		"\n"
+		"Rotate object up :			UP arrow key\n"
+		"Rotate object down :		DOWN arrow key\n"
+		"Rotate object left :		LEFT arrow key\n"
+		"Rotate object right :		RIGHT arrow key\n"
+		"\n"
+		"Change cube face color :	1, 2, 3, 4, 5, 6\n"
+		"Toggle texture mapping :	T\n"
+		"Toggle auto rotate :		A";
+	ImGui::Text(guideText.c_str());
+	ImGui::End();
+
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void SceneManager::onInput(GLFWwindow* window)

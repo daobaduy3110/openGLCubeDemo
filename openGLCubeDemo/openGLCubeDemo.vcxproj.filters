@@ -67,6 +67,9 @@
     <Filter Include="externals\glm\simd">
       <UniqueIdentifier>{066287db-64fe-4258-ac3a-3694c8626f6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="externals\imgui">
+      <UniqueIdentifier>{60fbf607-6b3a-480a-87f7-519df4581384}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Vertex.h">
@@ -546,6 +549,24 @@
     <ClInclude Include="externals\glm\simd\vector_relational.h">
       <Filter>externals\glm\simd</Filter>
     </ClInclude>
+    <ClInclude Include="externals\imgui\imconfig.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imgui.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imgui_internal.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\backends\imgui_impl_glfw.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\backends\imgui_impl_opengl3.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\backends\imgui_impl_opengl3_loader.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad\glad.c">
@@ -580,6 +601,27 @@
     </ClCompile>
     <ClCompile Include="externals\glm\detail\glm.cpp">
       <Filter>externals\glm\detail</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_demo.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_draw.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_tables.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_widgets.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\backends\imgui_impl_glfw.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\backends\imgui_impl_opengl3.cpp">
+      <Filter>externals\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
