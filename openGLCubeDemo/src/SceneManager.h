@@ -37,6 +37,8 @@ private:
 	std::vector<std::unique_ptr<Object>> _objs{};
 	float _deltaTime = 0.0f;
 	float _scrollSensitivity = 0.1f;
+	glm::vec3 _clearColor{ 0.0f };
+	float _rotateStep = 0.5f;
 };
 
 #define SCENE_MGR SceneManager::getInstance()

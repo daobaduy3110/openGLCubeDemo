@@ -21,9 +21,10 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	updateCameraVectors();
 }
 
-void Camera::init()
+void Camera::init(std::vector<float> projectionConfig, std::vector<float> cameraConfig)
 {
-	_projectionMat = glm::perspective(glm::radians(_zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
+	_zoom = projectionConfig[0];
+	_projectionMat = glm::perspective(glm::radians(_zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, projectionConfig[1], projectionConfig[2]);
 	_viewMat = getViewMat();
 }
 

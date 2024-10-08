@@ -115,7 +115,7 @@ void Object::checkAutoRotate()
 {
 	if (_isAutoRotate)
 	{
-		rotate(_autoRotateSpeed, glm::vec3(0.0f, 0.0f, 1.0f));
+		rotate(_autoRotateSpeed, _autoRotateAxis);
 	}
 }
 

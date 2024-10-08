@@ -927,6 +927,9 @@
     <Text Include="resource\model\Cube.txt">
       <Filter>Resource Files\model</Filter>
     </Text>
+    <Text Include="resource\SceneConfig.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\image\brick.jpg">

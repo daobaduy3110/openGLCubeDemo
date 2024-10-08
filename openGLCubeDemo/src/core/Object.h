@@ -25,6 +25,9 @@ public:
 
 	Shader* getShader() { return _shader.get(); }
 	glm::mat4 getModelMat() const { return _modelMat; }
+	void setCubeColor(const glm::vec3& color) { _cubeColor = color; }
+	void setAutoRotateAxis(const glm::vec3& axis) { _autoRotateAxis = axis; }
+	void setAutoRotateSpeed(const float speed) { _autoRotateSpeed = speed; }
 	void checkAutoRotate();
 	void updateFaceColor(glm::vec3 color, int32_t faceConfig);
 	void toggleUseTexture();
@@ -42,4 +45,5 @@ private:
 	bool _useTexture = false;
 	bool _isAutoRotate = false;
 	float _autoRotateSpeed = 0.1f;
+	glm::vec3 _autoRotateAxis{ 0.0f, 0.0f, 1.0f };
 };

@@ -2,10 +2,91 @@
 #include "definitions.h"
 #include <stb/stb_image.h>
 #include <glm/gtc/random.hpp>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 void SceneManager::readFile(const std::string file)
 {
+	std::ifstream inputFile(file);
+	if (!inputFile) {
+		std::cerr << "Error: Could not open the scene config file!" << std::endl;
+		_camera = std::unique_ptr<Camera>(new Camera(glm::vec3(0.0f, 1.5f, 4.0f)));
+	}
+	else
+	{
+		std::vector<float> projection;
+		std::vector<float> cameraValues;
+		std::vector<float> cameraPos;
+		std::vector<float> clearColor;
+		std::vector<float> cubeColor;
+		float rotateStep{ _rotateStep };
+		std::vector<float> autoRotateAxis;
+		float autoRotateSpeed{ 1.0 };
+		std::string line;
+		while (std::getline(inputFile, line)) {
+			std::istringstream iss(line);
+			std::string identifier;
+			iss >> identifier;
 
+			// Check the identifier and read corresponding values into the vector
+			if (identifier == "PROJECTION") {
+				float value;
+				while (iss >> value) {
+					projection.push_back(value);
+				}
+			}
+			else if (identifier == "CAMERA_VALUES") {
+				float value;
+				while (iss >> value) {
+					cameraValues.push_back(value);
+				}
+			}
+			else if (identifier == "CAMERA_POS") {
+				float value;
+				while (iss >> value) {
+					cameraPos.push_back(value);
+				}
+			}
+			else if (identifier == "CLEAR_COLOR") {
+				float value;
+				while (iss >> value) {
+					clearColor.push_back(value);
+				}
+			}
+			else if (identifier == "CUBE_COLOR") {
+				float value;
+				while (iss >> value) {
+					cubeColor.push_back(value);
+				}
+			}
+			else if (identifier == "ROTATE_STEP") {
+				iss >> rotateStep;
+			}
+			else if (identifier == "AUTOROTATE_AXIS") {
+				float value;
+				while (iss >> value) {
+					autoRotateAxis.push_back(value);
+				}
+			}
+			else if (identifier == "AUTOROTATE_SPEED") {
+				iss >> autoRotateSpeed;
+			}
+		}
+
+		// init camera
+		_camera = std::unique_ptr<Camera>(new Camera(glm::vec3(cameraPos[0], cameraPos[1], cameraPos[2])));
+		_camera->init(projection, cameraValues);
+
+		_clearColor = glm::vec3(clearColor[0], clearColor[1], clearColor[2]);
+		for (const auto& obj : _objs)
+		{
+			obj->setCubeColor(glm::vec3(cubeColor[0], cubeColor[1], cubeColor[2]));
+			obj->setAutoRotateAxis(glm::vec3(autoRotateAxis[0], autoRotateAxis[1], autoRotateAxis[2]));
+			obj->setAutoRotateSpeed(autoRotateSpeed);
+		}
+		_rotateStep = rotateStep;
+	}
 }
 
 Object* SceneManager::getObjectByID(GLuint objectID)
@@ -20,6 +101,8 @@ Object* SceneManager::getObjectByID(GLuint objectID)
 
 void SceneManager::init()
 {
+	readFile(SCENE_CONFIG_PATH);
+
 	// configure global opengl state
 	glEnable(GL_DEPTH_TEST);
 
@@ -31,10 +114,6 @@ void SceneManager::init()
 	loadTextures();
 
 	setupShaders();
-
-	// init camera
-	_camera = std::unique_ptr<Camera>(new Camera(glm::vec3(-0.5f, 1.5f, 4.0f)));
-	_camera->init();
 }
 
 void SceneManager::setupVertexData()
@@ -88,7 +167,7 @@ void SceneManager::setupShaders()
 void SceneManager::render(float deltaTime)
 {
 	_deltaTime = deltaTime;
-	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
+	glClearColor(_clearColor.r, _clearColor.g, _clearColor.b, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// bind textures on corresponding texture units
@@ -124,7 +203,7 @@ void SceneManager::onInput(GLFWwindow* window)
 
 	// object rotation
 	const std::vector<int> objectKeys = { GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_LEFT, GLFW_KEY_RIGHT};
-	const std::vector<float> objectRotateAngle = { 0.5f, -0.5f, 0.5f, -0.5f };
+	const std::vector<float> objectRotateAngle = { _rotateStep, -_rotateStep, _rotateStep, -_rotateStep };
 	const std::vector<glm::vec3> objectRotateAxis = { glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f) };
 	for (auto i = 0; i < objectKeys.size(); ++i)
 	{

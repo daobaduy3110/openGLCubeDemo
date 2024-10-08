@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <vector>
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 enum CAMERA_MOVEMENT {
@@ -35,7 +36,7 @@ public:
     // constructor with scalar values
     Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 
-    void init();
+    void init(std::vector<float> projectionConfig, std::vector<float> cameraConfig);
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void processDirectiveMovement(CAMERA_MOVEMENT direction, float deltaTime);
@@ -52,6 +53,7 @@ public:
     glm::mat4 getProjectionMat() const { return _projectionMat; }
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
     glm::mat4 getViewMat();
+    void setPos(const glm::vec3& pos) { _position = pos; }
 private:
     // camera Attributes
     glm::vec3 _position;

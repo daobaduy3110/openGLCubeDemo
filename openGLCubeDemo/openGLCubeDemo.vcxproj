@@ -309,6 +309,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="resource\model\Cube.txt" />
+    <Text Include="resource\SceneConfig.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\image\brick.jpg" />
