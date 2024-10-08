@@ -1,5 +1,6 @@
 # openGLCubeDemo
 Author: duy.daoba
+Github: https://github.com/daobaduy3110/openGLCubeDemo
 
 Build
 Open /openGLCubeDemo.sln using Visual Studio 2022/Microsoft Visual C++ 2022.
