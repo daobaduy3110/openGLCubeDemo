@@ -1,6 +1,7 @@
 #include "Object.h"
 #include "../SceneManager.h"
 #include "../definitions.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 Object::Object()
 {
@@ -80,15 +81,15 @@ void Object::setupVertexData()
 
 void Object::setupShader()
 {
+	// compile shaders
+	_shader = std::unique_ptr<Shader>(new Shader(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH));
+
 	_shader->use();
 	_shader->setInt("texture0", 0);
 	_shader->setInt("uFaceConfig", (1 << 6) - 1);	// set all faces
 	_shader->setVec3("uColor", _cubeColor);
 	_shader->setVec3("cubeColor", _cubeColor);
 	_shader->setBool("useTexture", _useTexture);
-
-	// compile shaders
-	_shader = std::unique_ptr<Shader>(new Shader(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH));
 }
 
 void Object::passAdditionalUniforms()
@@ -101,4 +102,46 @@ void Object::update()
 
 void Object::cleanUp()
 {
+	_shader->cleanUp();
+}
+
+void Object::rotate(float angle, const glm::vec3& axis)
+{
+	_modelMat = glm::rotate(_modelMat, glm::radians(angle), axis);
+	_shader->setMat4("model", _modelMat);
+}
+
+void Object::checkAutoRotate()
+{
+	if (_isAutoRotate)
+	{
+		rotate(_autoRotateSpeed, glm::vec3(0.0f, 0.0f, 1.0f));
+	}
+}
+
+void Object::updateFaceColor(glm::vec3 color, int32_t faceConfig)
+{
+	_shader->setVec3("uColor", color);
+	_shader->setInt("uFaceConfig", faceConfig);
+	_cubeColor = color;
+}
+
+void Object::toggleUseTexture()
+{
+	_useTexture = !_useTexture;
+	_shader->setBool("useTexture", _useTexture);
+}
+
+void Object::toggleAutoRotate()
+{
+	_isAutoRotate = !_isAutoRotate;
+}
+
+void Object::onMouseScroll(double yOffset)
+{
+	if (_isAutoRotate)
+	{
+		_autoRotateSpeed += yOffset;
+		_autoRotateSpeed = glm::clamp(_autoRotateSpeed, -1.0f, 1.0f);
+	}
 }

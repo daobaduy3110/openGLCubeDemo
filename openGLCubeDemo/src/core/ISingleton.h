@@ -29,5 +29,6 @@ inline T* ISingleton<T>::getInstance()
 template<class T>
 inline void ISingleton<T>::destroyInstance()
 {
-    SAFE_DEL(_instance);
+    if (_instance) delete _instance;
+    _instance = nullptr;
 }
