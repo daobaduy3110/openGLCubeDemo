@@ -2,6 +2,12 @@
 #include "../SceneManager.h"
 #include "../definitions.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <algorithm>
 
 Object::Object()
 {
@@ -22,6 +28,9 @@ void Object::readFile(FILE*& f)
 
 void Object::setupVertexData()
 {
+	// Open the file Cube.txt
+	std::ifstream inputFile(CUBE_MODEL_PATH);
+
 	float vertices[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,	0.0,
 	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,	0.0,
@@ -65,6 +74,30 @@ void Object::setupVertexData()
 	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,	5.0,
 	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,	5.0
 	};
+	if (!inputFile) {
+		std::cerr << "Error: Could not open the file." << std::endl;
+	}
+	else
+	{
+		std::string line;
+		while (std::getline(inputFile, line)) {
+			// Replace 'f' with empty string to avoid issues while parsing
+			std::replace(line.begin(), line.end(), 'f', ' ');
+
+			// Create a stringstream for parsing the line
+			std::istringstream iss(line);
+
+			float value;
+			uint32_t idx = 0;
+			while (iss >> value) {
+				// Read float values and push them to the vector
+				vertices[idx] = value;
+				++idx;
+			}
+		}
+	}
+	// Close the file
+	inputFile.close();
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
